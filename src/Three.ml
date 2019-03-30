@@ -1,4 +1,3 @@
-
 type vec3 = < x:int ; y:int ; z:int > Js.t
 
 module rec Math:
@@ -11,7 +10,7 @@ sig
             method z: float [@@bs.set]
         end [@bs] 
         type t = _euler Js.t
-        external make: int -> int -> int -> t = "Euler" [@@bs.new] [@@bs.module "THREE"] 
+        external make: int -> int -> int -> t = "Euler" [@@bs.new] [@@bs.module "three"] 
     end
 end = Math
 
@@ -23,7 +22,7 @@ sig
         method z: float [@@bs.set]
     end [@bs] 
     type t = _vector3 Js.t
-    external make: int -> int -> int -> Vector3.t = "Vector3" [@@bs.new] [@@bs.module "THREE"] 
+    external make: int -> int -> int -> Vector3.t = "Vector3" [@@bs.new] [@@bs.module "three"] 
 end = Vector3
 
 module rec Camera:
@@ -34,7 +33,7 @@ sig
     type t = _camera Js.t
     module Perspective:
         sig
-        external make : ?fov:float -> ?aspect:float -> ?near:float -> far:float -> t = "PerspectiveCamera" [@@bs.new] [@@bs.module "THREE"]
+        external make : ?fov:float -> ?aspect:float -> ?near:float -> far:float -> t = "PerspectiveCamera" [@@bs.new] [@@bs.module "three"]
         end
 end = Camera
 
@@ -43,7 +42,7 @@ sig
     type t
     module Box:
         sig
-            external make: int -> int -> int -> t = "BoxGeometry" [@@bs.new] [@@bs.module "THREE"] 
+            external make: int -> int -> int -> t = "BoxGeometry" [@@bs.new] [@@bs.module "three"] 
         end
 end = Geometry
 
@@ -53,7 +52,7 @@ sig
     type t
     module MeshBasic:
         sig
-            external make: < color: int > Js.t -> t = "MeshBasicMaterial" [@@bs.new] [@@bs.module "THREE"] 
+            external make: < color: int > Js.t -> t = "MeshBasicMaterial" [@@bs.new] [@@bs.module "three"] 
         end
 end = Material
 
@@ -64,7 +63,7 @@ sig
     end [@bs]
     type t = _mesh Js.t
     external rotate: Mesh.t -> Vector3.t -> float -> unit = "setRotationFromAxisAngle" [@@bs.send]
-    external make: Geometry.t -> Material.t -> Mesh.t = "Mesh" [@@bs.new] [@@bs.module "THREE"] 
+    external make: Geometry.t -> Material.t -> Mesh.t = "Mesh" [@@bs.new] [@@bs.module "three"] 
 end = Mesh
 
 module rec Scene:
@@ -73,7 +72,7 @@ sig
         method add: Mesh.t -> unit
     end [@bs] 
     type t = _scene Js.t
-    external make: unit -> Scene.t = "Scene" [@@bs.new] [@@bs.module "THREE"] 
+    external make: unit -> Scene.t = "Scene" [@@bs.new] [@@bs.module "three"] 
     external add: t -> Mesh.t -> unit = "" [@@bs.send]
 end = Scene 
 
@@ -85,5 +84,5 @@ sig
         method render: Scene.t -> Camera.t -> unit
     end [@bs]
     type t = _webGLRenderer Js.t
-    external make: unit -> t = "WebGLRenderer" [@@bs.new] [@@bs.module "THREE"] 
+    external make: unit -> t = "WebGLRenderer" [@@bs.new] [@@bs.module "three"] 
 end = WebGLRenderer

@@ -21,8 +21,9 @@
     "webpack-dev-server": "^3.1.14"
   },
   "dependencies": {
+    "@types/three": "^0.93.30",
     "bs-promise-monad": "^0.3.1",
     "bs-webapi": "^0.11.0",
-    "three": "^0.95.0"
+    "three": "^0.103.0"
   }
 }

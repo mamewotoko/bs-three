@@ -10,7 +10,7 @@ npm run dev
 # Build a javascript bundle
 
 ```
-npm run build
+./build.sh
 ```
 
 # Watch and dev on OCaml/ReasonML(BuckleScript)

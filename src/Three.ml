@@ -37,13 +37,13 @@ sig
       method width: float [@@bs.set]
       method x: float [@@bs.set]
       method y: float [@@bs.set]
+
       method add: Vector2.t -> Vector2.t
       method addScalar: float -> Vector2.t
       method addScaledVectors: Vector2.t -> float -> Vector2.t
       method addVectors: Vector2.t -> Vector2.t -> Vector2.t
       method angle: unit -> float
       method applyMatrix3: Matrix3.t -> Vector2.t
-           
       method ceil: unit -> Vector2.t
       method clamp: Vector2.t -> Vector2.t -> Vector2.t
       method clampLength: float -> float -> Vector2.t
@@ -98,6 +98,7 @@ sig
       method x: float [@@bs.set]
       method y: float [@@bs.set]
       method z: float [@@bs.set]
+
       method add: Vector3.t -> Vector3.t
       method addScalar: float -> Vector3.t
       method addScaledVector: Vector3.t -> float -> Vector3.t
@@ -174,17 +175,52 @@ sig
   class type _object3d =
     object
       (* method children: Object3D.t Js.List *)
-      method position: Vector3.t
-      method rotation: Euler.t
+      method castShadow: bool [@@bs.set]
+      (* method children *)
+      method rotation: Euler.t [@@bs.set]
+      method id: int
+      (*  ... *)
+      method name: string [@@bs.set]
+      method position: Vector3.t [@@bs.set]
+      (* used by lookAt method *)
       method up: Vector3.t
+      method rotation: Euler.t [@@bs.set]
       method uuid: string
       method visible: bool
+
       method clone: bool -> Object3D.t
+      method copy: Object3D.t -> bool -> Object3D.t
+
+      (* TODO: nullable? *)
+      method getObjectById: int -> Object3D.t
+      (* TODO: nullable? *)
+      method getObjectByName: string -> Object3D.t
+      (* TODO: nullable? *)
+      method getObjectByProperty: string -> float -> Object3D.t
+      method getWorldPosition: Vector3.t -> Vector3.t
+      (* method getWorldQuaternion: *)
+      method getWorldDirection: Vector3.t -> Vector3.t
+      method localToWorld: Vector3.t -> Vector3.t
       method lookAt: Vector3.t -> unit
+      (* method raycast *)
+      method rotateX: float -> Object3D.t
+      method rotateY: float -> Object3D.t
+      method rotateZ: float -> Object3D.t
+      (* toJSON *)
+
+      method translateX: float -> Object3D.t
+      method translateY: float -> Object3D.t
+      method translateZ: float -> Object3D.t
+      (*...*)
+      method updateMatrix: unit -> unit
+      method updateMatrixWorld: bool -> unit
+      method worldToLocal: Vector3.t -> Vector3.t
+           
       method userData: float Js.Dict.t [@@bs.set] [@@bs.get]
       (* TODO: userData *)
       (* mesh or camera *)
       method add: Object3D.t -> unit
+           
     end [@bs]
   type t = _object3d Js.t
   external make: unit -> t = "Object3D" [@@bs.new] [@@bs.module "three"]
@@ -382,12 +418,9 @@ sig
       inherit Object3D._object3d
                 (* drawMode *)
                 (* isMesh *)
-      (* raycast *)
-            (*
       method geometry: Geometry.t
       method material: Material.t
-      method updateMorphTargets: unit -> unit
-             *)
+                         (* method updateMorphTargets: unit -> unit *)
     end [@bs]
   type t = _mesh Js.t
   external rotate: Mesh.t -> Vector3.t -> float -> unit = "setRotationFromAxisAngle" [@@bs.send]
@@ -399,6 +432,13 @@ sig
   class type _scene =
     object
       inherit Object3D._object3d
+      method autoUpdate: bool [@@bs.set]
+                              (*method background*)
+      method environment: Texture.t [@@bs.set]
+                                    (* method fog: *)
+      method overrideMaterial: Material.t [@@bs.set]
+      method dispose: unit -> unit
+      (* method toJSON *)
     end [@bs]
   type t = _scene Js.t
   external make: unit -> Scene.t = "Scene" [@@bs.new] [@@bs.module "three"]

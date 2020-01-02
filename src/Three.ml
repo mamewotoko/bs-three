@@ -1,20 +1,31 @@
+(* bs-webapi *)
+open Webapi
 type vec2 = < x:float ; y:float > Js.t
 type vec3 = < x:int ; y:int; z:int > Js.t
 
-module rec Math:
+module rec Euler:
 sig
-    module Euler:
-    sig
-      class type _euler =
-        object
-          method x: float [@@bs.set]
-          method y: float [@@bs.set]
-          method z: float [@@bs.set]
-        end [@bs] 
-      type t = _euler Js.t
-      external make: int -> int -> int -> t = "Euler" [@@bs.new] [@@bs.module "three"] 
-    end
-end = Math
+  class type _euler =
+    object
+      method x: float [@@bs.set]
+      method y: float [@@bs.set]
+      method z: float [@@bs.set]
+    end [@bs]
+  type t = _euler Js.t
+  external make: float -> float -> float -> string -> t = "Euler" [@@bs.new] [@@bs.module "three"]
+end = Euler
+
+module rec Matrix3:
+sig
+  class type _matrix3 =
+    object
+      method set: float -> float -> float ->
+                  float -> float -> float ->
+                  float -> float -> float -> Matrix3.t
+    end [@bs]
+  type t = _matrix3 Js.t
+  external make: unit -> t = "Matrix3" [@@bs.new] [@@bs.module "three"]
+end = Matrix3
 
 module rec Vector2:
 sig
@@ -32,7 +43,7 @@ sig
       method rotateAround: Vector2.t -> float -> Vector2.t
     end [@bs]
   type t = _vector2 Js.t
-  external make: float -> float -> Vector2.t = "Vector2" [@@bs.new] [@@bs.module "three"] 
+  external make: float -> float -> Vector2.t = "Vector2" [@@bs.new] [@@bs.module "three"]
 end = Vector2
 
 module rec Vector3:
@@ -48,7 +59,7 @@ sig
       method addVectors: Vector3.t -> Vector3.t -> Vector3.t
       method applyAxisAngle: Vector3.t -> float -> Vector3.t
       method applyMatrix3: Matrix3.t -> Vector3.t
-      method applyEuler: Math.Euler.t -> Vector3.t
+      method applyEuler: Euler.t -> Vector3.t
       method multiplyScalar: float -> Vector3.t
       method set: float -> float -> float -> unit
       method clone: unit -> Vector3.t
@@ -63,13 +74,13 @@ sig
     object
       (* method children: Object3D.t Js.List *)
       method position: Vector3.t
-      method rotation: Math.Euler.t
+      method rotation: Euler.t
       method up: Vector3.t
       method uuid: string
       method visible: bool
       method clone: bool -> Object3D.t
       method lookAt: Vector3.t -> unit
-      method userData: float Js.Dict.t [@@bs.set] [@@bs.get] 
+      method userData: float Js.Dict.t [@@bs.set] [@@bs.get]
       (* TODO: userData *)
       (* mesh or camera *)
       method add: Object3D.t -> unit
@@ -113,7 +124,7 @@ sig
                                (* TODO: add repeat set *)
     end [@bs]
   type t = _texture Js.t
-  external make: Dom.element -> t = "Texture" [@@bs.new] [@@bs.module "three"]
+  external make: Dom.Element.t -> t = "Texture" [@@bs.new] [@@bs.module "three"]
 end = Texture
 
 module rec TextureLoader:
@@ -143,7 +154,7 @@ sig
       method vertices: Vector3.t Js.Array.t [@@bs.get]
     end [@bs]
   type t = _Geometry Js.t
-               
+  (* no buffer *)
   module Box:
   sig
     external make: float -> float -> float -> t = "BoxGeometry" [@@bs.new] [@@bs.module "three"]
@@ -258,14 +269,41 @@ module rec WebGLRenderer:
 sig
   class type _webGLRenderer =
     object
-      method setSize: int -> int -> unit
-      method domElement: Dom.element
+      method setPixelRatio: float -> unit
+      method domElement: Dom.Element.t
       method render: Scene.t -> Camera.t -> unit
       (* color -> alpha *)
       method setClearColor: int -> float -> unit
+      method autoClear: bool
+      method autoClearColor: bool
+      method autoClearDepth: bool
+      method autoClearStencil: bool
+                                 (* ... *)
+      method domElement: Dom.Element.t
+
+      method gammaFactor: float
+
+      method getClearAlpha: unit -> float
+      (* method getClearColor: unit -> Color.t *)
+      method dispose: unit -> unit
+      method setSize: int -> int -> bool -> unit
     end [@bs]
   type t = _webGLRenderer Js.t
-  external make: < antialias:bool; canvas: Dom.element option > Js.t -> t = "WebGLRenderer" [@@bs.new] [@@bs.module "three"]
+  type param = {
+      canvas: Dom.Element.t [@bs.optional];
+      (* context *)
+      (* precision *)
+      premultipliedAlpha: bool [@bs.optional];
+      alpha: bool [@bs.optional];
+      antialias: bool [@bs.optional];
+      stencil: bool [@bs.optional];
+      preserveDrawingBuffer: bool [@bs.optional];
+      (* powerPreference *)
+      failIfMajorPerformanceCaveat: bool [@bs.optional];
+      depth: bool [@bs.optional];
+      (* logarithmicDepthBuffer *)
+    } [@@bs.deriving abstract]
+  external make: param -> t = "WebGLRenderer" [@@bs.new] [@@bs.module "three"]
 end = WebGLRenderer
 
 (* *)
@@ -283,7 +321,7 @@ sig
     end [@bs]
   type t = _orbitcontrols Js.t
   (* returns constructor *)
-  external make: Camera.t -> Dom.element -> t = "three-orbitcontrols" [@@bs.new] [@@bs.module]
+  external make: Camera.t -> Dom.Element.t -> t = "three-orbitcontrols" [@@bs.new] [@@bs.module]
 end = OrbitControls
 
 (* WebVR *)
@@ -331,7 +369,8 @@ sig
   type t = _gltfexporter Js.t
   external make: unit -> t = "three-gltf-exporter" [@@bs.new] [@@bs.module]
 end = GLTFExporter
-      
+
+       
 (* not tested *)
 (* module rec DeviceOrientationControls:
  * sig

@@ -1,3 +1,3 @@
 #! /bin/sh
-# dummy_new: to call OrbitControls
-bsb -make-world && sed -ie 's/\.dummy_new//' src/main.bs.js && browserify src/main.bs.js > src/main.browser.js
+# replace "dummy_new" to call OrbitControls
+mkdir -p js && $(npm bin)/bsb -make-world && $(npm bin)/browserify src/main.bs.js > js/main.browser.js

@@ -1,7 +1,5 @@
 (* bs-webapi *)
 open Webapi
-type vec2 = < x:float ; y:float > Js.t
-type vec3 = < x:int ; y:int; z:int > Js.t
 
 module rec Euler:
 sig
@@ -12,7 +10,11 @@ sig
       method z: float [@@bs.set]
     end [@bs]
   type t = _euler Js.t
-  external make: float -> float -> float -> string -> t = "Euler" [@@bs.new] [@@bs.module "three"]
+  external make: float ->
+                 float ->
+                 float ->
+                 string ->
+                 t = "Euler" [@@bs.new] [@@bs.module "three"]
 end = Euler
 
 module rec Matrix3:
@@ -31,16 +33,59 @@ module rec Vector2:
 sig
   class type _vector2 =
     object
+      method height: float [@@bs.set]
+      method width: float [@@bs.set]
       method x: float [@@bs.set]
       method y: float [@@bs.set]
-      method z: float [@@bs.set]
+      method add: Vector2.t -> Vector2.t
       method addScalar: float -> Vector2.t
       method addScaledVectors: Vector2.t -> float -> Vector2.t
       method addVectors: Vector2.t -> Vector2.t -> Vector2.t
+      method angle: unit -> float
+      method applyMatrix3: Matrix3.t -> Vector2.t
+           
       method ceil: unit -> Vector2.t
+      method clamp: Vector2.t -> Vector2.t -> Vector2.t
+      method clampLength: float -> float -> Vector2.t
+      method clampScalar: float -> float -> Vector2.t
       method clone: unit -> Vector2.t
+      method copy: Vector2.t -> Vector2.t
       method distanceTo: Vector2.t -> float
+      method manhattanDistanceTo: Vector2.t -> float
+      method distanceToSquared: Vector2.t -> float
+      method divide: Vector2.t -> Vector2.t
+      method divideScalar: float -> Vector2.t
+      method dot: Vector2.t -> float
+      method cross: Vector2.t -> float
+      method equals: Vector2.t -> boolean
+      method floor: Vector2.t -> Vector2.t
+      (* method fromArray: *)
+      (* method fromBufferAttribute: *)
+      method getComponent: int -> float
+      method length: unit -> float
+      method manhattanLength: unit -> float
+      method lengthSq: unit -> float
+      method lerp: Vector2.t -> float -> Vector2.t
+      method lerpVectors: Vector2.t -> Vector2.t -> float -> Vector2.t
+      method negate: unit -> Vector2.t
+      method normalize: unit -> Vector2.t
+      method max: Vector2.t -> Vector2.t
+      method min: Vector2.t -> Vector2.t
+      method multiply: Vector2.t -> Vector2.t
+      method multiplyscalar: float -> Vector2.t
       method rotateAround: Vector2.t -> float -> Vector2.t
+      method round: unit -> Vector2.t
+      method roundToZero: unit -> Vector2.t
+      method set: float -> float -> Vector2.t
+      method setComponent: int -> float -> unit
+      method setLength: float -> Vector2.t
+      method setscalar: float -> Vector2.t
+      method setX: float -> Vector2.t
+      method setY: float -> Vector2.t
+      method sub: Vector2.t -> Vector2.t
+      method subScalar: float -> Vector2.t
+      method subVectors: Vector2.t -> Vector2.t -> Vector2.t
+      (* method toArray *)
     end [@bs]
   type t = _vector2 Js.t
   external make: float -> float -> Vector2.t = "Vector2" [@@bs.new] [@@bs.module "three"]
@@ -58,11 +103,67 @@ sig
       method addScaledVector: Vector3.t -> float -> Vector3.t
       method addVectors: Vector3.t -> Vector3.t -> Vector3.t
       method applyAxisAngle: Vector3.t -> float -> Vector3.t
-      method applyMatrix3: Matrix3.t -> Vector3.t
       method applyEuler: Euler.t -> Vector3.t
-      method multiplyScalar: float -> Vector3.t
-      method set: float -> float -> float -> unit
+      method applyMatrix3: Matrix3.t -> Vector3.t
+      (* applyMatrix4 *)
+      method applyNormalMatrix: Matrix3.t -> Vector3.t
+      (* method applyQuaternion *)
+      method angleTo: Vector3.t -> float
+      method ceil: Vector3.t
+      method clamp: Vector3.t -> Vector3.t -> Vector3.t
+      method clampLength: float -> float -> Vector3.t
+      method clampScalar: float -> float -> Vector3.t
       method clone: unit -> Vector3.t
+      method copy: Vector3.t -> Vector3.t
+      method cross: Vector3.t -> Vector3.t
+      method crossVectors: Vector3.t -> Vector3.t -> Vector3.t
+      method distanceTo: Vector3.t -> float
+      method manhattanDistanceTo: Vector3.t -> float
+      method distanceToSquared: Vector3.t -> float
+      method divide: Vector3.t -> Vector3.t
+      method divideScalar: float -> Vector3.t
+      method dot: Vector3.t -> float
+      method equals: Vector3.t -> bool
+      method floor: unit -> Vector3.t
+      (* method fromArray: *)
+      (* method fromBufferAttribute: *)
+      method getComponent: int -> float
+      method length: unit -> float
+      method manhattanLength: unit -> float
+      method lengthSq: unit -> float
+      method lerp: Vector3.t -> float -> Vector3.t
+      method lerpVectors: Vector3.t -> Vector3.t -> float -> Vector3.t
+      method max: Vector3.t -> Vector3.t
+      method min: Vector3.t -> Vector3.t
+      method multiply: Vector3.t -> Vector3.t
+      method multiplyScalar: float -> Vector3.t
+      method multiplyVectors: Vector3.t -> Vector3.t -> Vector3.t
+      method negate: unit -> Vector3.t
+      method normalize: unit -> Vector3.t
+      (* method project: Camera.t -> Vector3.t *)
+      (* method projectOnPlane: Camera.t -> Vector3.t *)
+      method projectOnVector: Vector3.t -> Vector3.t
+      method reflect: Vector3.t -> Vector3.t
+      method round: unit -> Vector3.t
+      method roundToZero: unit -> Vector3.t
+      method set: float -> float -> float -> Vector3.t
+      method setComponent: int -> float -> unit
+      (* method setFromCylindrical *)
+      (* method setFromCylindricalCoords *)
+      (* method setFromCylindrical  *)
+      (* method setFromCylindrical  *)
+      (* method setFromCylindrical  *)
+      method setLength: float -> Vector3.t
+      method setScalar: float -> Vector3.t
+      method setX: float -> Vector3.t
+      method setY: float -> Vector3.t
+      method setZ: float -> Vector3.t
+      method sub: Vector3.t -> Vector3.t
+      method subScalar: float -> Vector3.t
+      method subVectors: Vector3.t -> Vector3.t -> Vector3.t
+                                                     (* toArray *)
+                                                     (* transformDirection *)
+      (* method unproject: Camera.t -> Vector3.t *)
     end [@bs]
   type t = _vector3 Js.t
   external make: float -> float -> float -> Vector3.t = "Vector3" [@@bs.new] [@@bs.module "three"]
@@ -111,7 +212,11 @@ sig
   type t = _camera Js.t
   module Perspective:
   sig
-    external make : ?fov:float -> ?aspect:float -> ?near:float -> far:float -> t = "PerspectiveCamera" [@@bs.new] [@@bs.module "three"]
+    external make : ?fov:float ->
+                    ?aspect:float ->
+                    ?near:float ->
+                    far:float ->
+                    t = "PerspectiveCamera" [@@bs.new] [@@bs.module "three"]
   end
 end = Camera
 
@@ -157,17 +262,34 @@ sig
   (* no buffer *)
   module Box:
   sig
-    external make: float -> float -> float -> t = "BoxGeometry" [@@bs.new] [@@bs.module "three"]
+    external make: float ->
+                   float ->
+                   float ->
+                   t = "BoxGeometry" [@@bs.new] [@@bs.module "three"]
   end
 
   module Plane:
   sig
-    external make: (*width*) float -> (*height*) float -> ?widthSegments:int -> ?heightSegments: int -> unit -> t = "PlaneGeometry" [@@bs.new] [@@bs.module "three"]
+    external make: (*width*) float ->
+                   (*height*) float ->
+                   ?widthSegments:int ->
+                   ?heightSegments: int ->
+                   unit ->
+                   t = "PlaneGeometry" [@@bs.new] [@@bs.module "three"]
   end
 
   module Cylinder:
   sig
-    external make: ?radiusTop:float -> ?radiusBottom:float -> ?height:float -> ?radialSegments:int -> ?heightSegments:int -> ?openEnded:bool -> ?thetaStart:float -> ?thetaLength:float -> unit -> t = "CylinderGeometry" [@@bs.new] [@@bs.module "three"]
+    external make: ?radiusTop:float ->
+                   ?radiusBottom:float ->
+                   ?height:float ->
+                   ?radialSegments:int ->
+                   ?heightSegments:int ->
+                   ?openEnded:bool ->
+                   ?thetaStart:float ->
+                   ?thetaLength:float ->
+                   unit ->
+                   t = "CylinderGeometry" [@@bs.new] [@@bs.module "three"]
   end
   external make: unit -> t = "Geometry" [@@bs.new] [@@bs.module "three"]
 
@@ -196,7 +318,6 @@ sig
 
     external make: unit -> t = "BufferGeometry" [@@bs.new] [@@bs.module "three"]
   end
-
 end = Geometry
 
 module rec Material:
@@ -204,19 +325,38 @@ sig
   type t
   module MeshBasic:
   sig
-    external make: < color: int; map: Texture.t option;> Js.t -> t = "MeshBasicMaterial" [@@bs.new] [@@bs.module "three"]
+    type param = {
+        color: int [@bs.optional];
+        map: Texture.t [@bs.optional];
+      } [@@bs.deriving abstract]
+    external make: param -> t = "MeshBasicMaterial" [@@bs.new] [@@bs.module "three"]
   end
   module MeshPhongMaterial:
   sig
-    external make: < color: int Js.Nullable.t; map: Texture.t Js.Nullable.t > Js.t -> t = "MeshPhongMaterial" [@@bs.new] [@@bs.module "three"]
+    type param = {
+        color: int [@bs.optional];
+        map: Texture.t [@bs.optional];
+      } [@@bs.deriving abstract]
+    external make: param -> t = "MeshPhongMaterial" [@@bs.new] [@@bs.module "three"]
   end
   module LineBasic:
   sig
-    external make: < color: int; linewidth: float > Js.t -> t = "LineBasicMaterial" [@@bs.new] [@@bs.module "three"]
+    type param = {
+        color: int [@bs.optional];
+        linewidth: float [@bs.optional];
+      } [@@bs.deriving abstract]
+    external make: param -> t = "LineBasicMaterial" [@@bs.new] [@@bs.module "three"]
   end
   module LineDashed:
   sig
-    external make: < color: int; linewidth: float; scale: float; dashSize: float; gapSize: float > Js.t -> t = "LineDashedMaterial" [@@bs.new] [@@bs.module "three"]
+    type param = {
+        color: int [@bs.optional];
+        linewidth: float [@bs.optional];
+        scale: float [@bs.optional];
+        dashSize: float [@bs.optional];
+        gapSize: float  [@bs.optional];
+    } [@@bs.deriving abstract]
+    external make: param -> t = "LineDashedMaterial" [@@bs.new] [@@bs.module "three"]
   end
 end = Material
 

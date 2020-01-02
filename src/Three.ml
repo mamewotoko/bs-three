@@ -57,7 +57,7 @@ sig
       method divideScalar: float -> Vector2.t
       method dot: Vector2.t -> float
       method cross: Vector2.t -> float
-      method equals: Vector2.t -> boolean
+      method equals: Vector2.t -> bool
       method floor: Vector2.t -> Vector2.t
       (* method fromArray: *)
       (* method fromBufferAttribute: *)

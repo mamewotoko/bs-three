@@ -29,7 +29,8 @@ sig
       method ceil: unit -> Vector2.t
       method clone: unit -> Vector2.t
       method distanceTo: Vector2.t -> float
-    end [@bs] 
+      method rotateAround: Vector2.t -> float -> Vector2.t
+    end [@bs]
   type t = _vector2 Js.t
   external make: float -> float -> Vector2.t = "Vector2" [@@bs.new] [@@bs.module "three"] 
 end = Vector2
@@ -41,13 +42,21 @@ sig
       method x: float [@@bs.set]
       method y: float [@@bs.set]
       method z: float [@@bs.set]
+      method add: Vector3.t -> Vector3.t
+      method addScalar: float -> Vector3.t
+      method addScaledVector: Vector3.t -> float -> Vector3.t
+      method addVectors: Vector3.t -> Vector3.t -> Vector3.t
+      method applyAxisAngle: Vector3.t -> float -> Vector3.t
+      method applyMatrix3: Matrix3.t -> Vector3.t
+      method applyEuler: Math.Euler.t -> Vector3.t
+      method multiplyScalar: float -> Vector3.t
       method set: float -> float -> float -> unit
       method clone: unit -> Vector3.t
-    end [@bs] 
+    end [@bs]
   type t = _vector3 Js.t
-  external make: int -> int -> int -> Vector3.t = "Vector3" [@@bs.new] [@@bs.module "three"] 
+  external make: float -> float -> float -> Vector3.t = "Vector3" [@@bs.new] [@@bs.module "three"]
 end = Vector3
-         
+
 module rec Object3D:
 sig
   class type _object3d =
@@ -64,17 +73,17 @@ sig
       (* TODO: userData *)
       (* mesh or camera *)
       method add: Object3D.t -> unit
-    end [@bs] 
+    end [@bs]
   type t = _object3d Js.t
   external make: unit -> t = "Object3D" [@@bs.new] [@@bs.module "three"]
 end = Object3D
-         
+
 module rec Group:
 sig
   class type _group =
     object
       inherit Object3D._object3d
-    end [@bs] 
+    end [@bs]
   type t = _group Js.t
   external make: unit -> t = "Group" [@@bs.new] [@@bs.module "three"]
 end = Group
@@ -84,6 +93,9 @@ sig
   class type _camera =
     object
       inherit Object3D._object3d
+      method aspect: float [@@bs.set]
+      method updateProjectionMatrix: unit -> unit
+      (* method zoom: float [@@bs.set] [@@bs.get] *)
     end [@bs]
   type t = _camera Js.t
   module Perspective:
@@ -96,10 +108,12 @@ module rec Texture:
 sig
   class type _texture =
     object
+      method repeat: Vector2.t
       method needsUpdate: bool [@@bs.set]
                                (* TODO: add repeat set *)
     end [@bs]
   type t = _texture Js.t
+  external make: Dom.element -> t = "Texture" [@@bs.new] [@@bs.module "three"]
 end = Texture
 
 module rec TextureLoader:
@@ -112,7 +126,16 @@ sig
   type t = _TextureLoader Js.t
   external make : unit -> t = "TextureLoader" [@@bs.new] [@@bs.module "three"]
 end = TextureLoader
-         
+
+module rec Float32Array:
+sig
+  class type _Float32Array =
+    object
+    end [@bs]
+  type t = _Float32Array Js.t
+  external make: float Js.Array.t -> t = "Float32Array" [@@bs.new]
+end = Float32Array
+
 module rec Geometry:
 sig
   class type _Geometry =
@@ -123,9 +146,46 @@ sig
                
   module Box:
   sig
-    external make: int -> int -> int -> t = "BoxGeometry" [@@bs.new] [@@bs.module "three"] 
+    external make: float -> float -> float -> t = "BoxGeometry" [@@bs.new] [@@bs.module "three"]
   end
-  external make: unit -> t = "Geometry" [@@bs.new] [@@bs.module "three"] 
+
+  module Plane:
+  sig
+    external make: (*width*) float -> (*height*) float -> ?widthSegments:int -> ?heightSegments: int -> unit -> t = "PlaneGeometry" [@@bs.new] [@@bs.module "three"]
+  end
+
+  module Cylinder:
+  sig
+    external make: ?radiusTop:float -> ?radiusBottom:float -> ?height:float -> ?radialSegments:int -> ?heightSegments:int -> ?openEnded:bool -> ?thetaStart:float -> ?thetaLength:float -> unit -> t = "CylinderGeometry" [@@bs.new] [@@bs.module "three"]
+  end
+  external make: unit -> t = "Geometry" [@@bs.new] [@@bs.module "three"]
+
+  module rec BufferGeometry:
+  sig
+    (* class type _BufferGeometry =
+     *   object
+     *     method addAttribute: string -> BufferAttribute.t
+     *   end [@bs]
+     * type t = _Geometry Js.t *)
+    (* TODO: BufferGeometry does not have vertices method (not ) *)
+    module Box:
+    sig
+      external make: float -> float -> float -> t = "BoxBufferGeometry" [@@bs.new] [@@bs.module "three"]
+    end
+
+    module Plane:
+    sig
+      external make: (*width*) float -> (*height*) float -> ?widthSegments:int -> ?heightSegments: int -> unit -> t = "PlaneBufferGeometry" [@@bs.new] [@@bs.module "three"]
+    end
+
+    module Cylinder:
+    sig
+      external make: ?radiusTop:float -> ?radiusBottom:float -> ?height:float -> ?radialSegments:int -> ?heightSegments:int -> ?openEnded:bool -> ?thetaStart:float -> ?thetaLength:float -> unit -> t = "CylinderBufferGeometry" [@@bs.new] [@@bs.module "three"]
+    end
+
+    external make: unit -> t = "BufferGeometry" [@@bs.new] [@@bs.module "three"]
+  end
+
 end = Geometry
 
 module rec Material:
@@ -133,15 +193,19 @@ sig
   type t
   module MeshBasic:
   sig
-    external make: < color: int; map: Texture.t option > Js.t -> t = "MeshBasicMaterial" [@@bs.new] [@@bs.module "three"] 
+    external make: < color: int; map: Texture.t option;> Js.t -> t = "MeshBasicMaterial" [@@bs.new] [@@bs.module "three"]
+  end
+  module MeshPhongMaterial:
+  sig
+    external make: < color: int Js.Nullable.t; map: Texture.t Js.Nullable.t > Js.t -> t = "MeshPhongMaterial" [@@bs.new] [@@bs.module "three"]
   end
   module LineBasic:
   sig
-    external make: < color: int; linewidth: int > Js.t -> t = "LineBasicMaterial" [@@bs.new] [@@bs.module "three"] 
+    external make: < color: int; linewidth: float > Js.t -> t = "LineBasicMaterial" [@@bs.new] [@@bs.module "three"]
   end
   module LineDashed:
   sig
-    external make: < color: int; linewidth: int; scale: int; dashSize: int; gapSize: int > Js.t -> t = "LineDashedMaterial" [@@bs.new] [@@bs.module "three"] 
+    external make: < color: int; linewidth: float; scale: float; dashSize: float; gapSize: float > Js.t -> t = "LineDashedMaterial" [@@bs.new] [@@bs.module "three"]
   end
 end = Material
 
@@ -176,7 +240,7 @@ sig
     end [@bs]
   type t = _mesh Js.t
   external rotate: Mesh.t -> Vector3.t -> float -> unit = "setRotationFromAxisAngle" [@@bs.send]
-  external make: Geometry.t -> Material.t -> Mesh.t = "Mesh" [@@bs.new] [@@bs.module "three"] 
+  external make: Geometry.t -> Material.t -> Mesh.t = "Mesh" [@@bs.new] [@@bs.module "three"]
 end = Mesh
 
 module rec Scene:
@@ -184,11 +248,11 @@ sig
   class type _scene =
     object
       inherit Object3D._object3d
-    end [@bs] 
+    end [@bs]
   type t = _scene Js.t
-  external make: unit -> Scene.t = "Scene" [@@bs.new] [@@bs.module "three"] 
+  external make: unit -> Scene.t = "Scene" [@@bs.new] [@@bs.module "three"]
   external add: t -> Mesh.t -> unit = "" [@@bs.send]
-end = Scene 
+end = Scene
 
 module rec WebGLRenderer:
 sig
@@ -197,9 +261,11 @@ sig
       method setSize: int -> int -> unit
       method domElement: Dom.element
       method render: Scene.t -> Camera.t -> unit
+      (* color -> alpha *)
+      method setClearColor: int -> float -> unit
     end [@bs]
   type t = _webGLRenderer Js.t
-  external make: < antialias:bool > Js.t -> t = "WebGLRenderer" [@@bs.new] [@@bs.module "three"]
+  external make: < antialias:bool; canvas: Dom.element option > Js.t -> t = "WebGLRenderer" [@@bs.new] [@@bs.module "three"]
 end = WebGLRenderer
 
 (* *)
@@ -209,8 +275,84 @@ sig
     object
       method target: Vector3.t
       method update: unit -> unit
+      method rotateSpeed: float [@@bs.set]
+      method zoomSpeed: float [@@bs.set]
+      method panSpeed: float [@@bs.set]
+      method enableZoom: bool [@@bs.set]
+      method enabled: bool [@@bs.set]
     end [@bs]
   type t = _orbitcontrols Js.t
   (* returns constructor *)
-  external make: Camera.t -> Dom.element -> t = "dummy_new" [@@bs.new] [@@bs.module "three-orbitcontrols"]
+  external make: Camera.t -> Dom.element -> t = "three-orbitcontrols" [@@bs.new] [@@bs.module]
 end = OrbitControls
+
+(* WebVR *)
+module rec WebVRPolyfill:
+sig
+  class type _webvrpolyfill =
+    object
+    end [@bs]
+  type t = _webvrpolyfill Js.t
+  (* returns constructor *)
+  external make: unit -> t = "webvr-polyfill" [@@bs.new] [@@bs.module]
+end = WebVRPolyfill
+
+(* StereoEffect *)
+module rec StereoEffect:
+sig
+  class type _stereoeffect =
+    object
+      method setSize: float -> float -> unit
+    end [@bs]
+  type t = _stereoeffect Js.t
+  (* returns constructor *)
+  external make: WebGLRenderer.t -> t = "three-stereo-effect" [@@bs.new] [@@bs.module]
+end = StereoEffect
+
+module rec Light:
+sig
+  class type _Light =
+    object
+      inherit Object3D._object3d
+    end [@bs]
+  type t = _Light Js.t
+  module Ambient:
+   sig
+    external make: ?color:int -> ?intensity:float -> unit -> t = "AmbientLight" [@@bs.new] [@@bs.module "three"]
+   end
+end = Light
+
+module rec GLTFExporter:
+sig
+  class type _gltfexporter =
+    object
+      method parse: Scene.t -> (Js.Json.t -> unit) -> unit
+    end [@bs]
+  type t = _gltfexporter Js.t
+  external make: unit -> t = "three-gltf-exporter" [@@bs.new] [@@bs.module]
+end = GLTFExporter
+      
+(* not tested *)
+(* module rec DeviceOrientationControls:
+ * sig
+ *   class type _deviceorientationcontrols =
+ *     object
+ *       method connect: unit -> unit
+ *       method update: unit -> unit
+ *     end [@bs]
+ *   type t = _deviceorientationcontrols Js.t
+ *   (\* returns constructor *\)
+ *   external make: Camera.t -> bool -> t = "dummy_new" [@@bs.new] [@@bs.module "three-controls-deviceorientation"]
+ * end = DeviceOrientationControls *)
+
+(* not tested *)
+(* module rec StereoEffect:
+ * sig
+ *   class type _stereoeffect =
+ *     object
+ *       method setSize: int -> int -> unit
+ *     end [@bs]
+ *   type t = _stereoeffect Js.t
+ *   (\* TODO: Render.t *\)
+ *   external make: WebGLRenderer.t -> t = "StereoEffect" [@@bs.new] [@@bs.module "three-stereo-effect"]
+ * end = StereoEffect *)

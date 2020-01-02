@@ -29,7 +29,7 @@ let _ = renderer##setSize width height false
 let _ = appendChild mainDiv renderer##domElement
 
 let geometry = Geometry.Box.make 1. 1. 1.
-let material = Material.MeshBasic.make [%bs.obj { color = int_of_string "0x00ff00"; map = None }]
+let material = Material.MeshBasic.make (Material.MeshBasic.param ~color:(int_of_string "0x00ff00") ())
 let cube = Mesh.make geometry material
 
 let vv = Vector3.make 0. 1. 0.

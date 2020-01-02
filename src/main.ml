@@ -25,16 +25,14 @@ let scene = Scene.make ()
 let camera = Camera.Perspective.make ~fov:45.0 ~aspect:ratio ~near:1.0 ~far:1000.0
 
 let renderer = WebGLRenderer.make (WebGLRenderer.param ~antialias:true ())
-let _ = renderer##setSize width height
+let _ = renderer##setSize width height false
 let _ = appendChild mainDiv renderer##domElement
 
 let geometry = Geometry.Box.make 1. 1. 1.
 let material = Material.MeshBasic.make [%bs.obj { color = int_of_string "0x00ff00"; map = None }]
 let cube = Mesh.make geometry material
 
-let v = [%bs.obj { x=0;y=32;z=0}]
 let vv = Vector3.make 0. 1. 0.
-
 
 let _ =
     Scene.add scene cube;

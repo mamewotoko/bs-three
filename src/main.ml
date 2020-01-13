@@ -3,6 +3,7 @@ let _ = Js.log "Three.js BuckleScript binding r1"
 open Three
 open PromiseMonad
 
+(* TODO: use Webapi *)
 type document
 type element = Dom.element
 external document:document = "" [@@bs.val]
@@ -50,6 +51,6 @@ let rec animate timestamp =
     (* vv##x = !angle /. 3.141 *)
     (* vv##y = (3.141 - !angle) /. 3.141 *)
     angle := mod_float (!angle +. 0.05) 3.141;
-    requestAnimationFrame(animate)
+    requestAnimationFrame animate
 
-let _ = animate(0.0)
+let _ = animate 0.0

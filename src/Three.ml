@@ -177,7 +177,6 @@ sig
       (* method children: Object3D.t Js.List *)
       method castShadow: bool [@@bs.set]
       (* method children *)
-      method rotation: Euler.t [@@bs.set]
       method id: int
       (*  ... *)
       method name: string [@@bs.set]
@@ -309,7 +308,7 @@ sig
     external make: (*width*) float ->
                    (*height*) float ->
                    ?widthSegments:int ->
-                   ?heightSegments: int ->
+                   ?heightSegments:int ->
                    unit ->
                    t = "PlaneGeometry" [@@bs.new] [@@bs.module "three"]
   end
@@ -349,7 +348,15 @@ sig
 
     module Cylinder:
     sig
-      external make: ?radiusTop:float -> ?radiusBottom:float -> ?height:float -> ?radialSegments:int -> ?heightSegments:int -> ?openEnded:bool -> ?thetaStart:float -> ?thetaLength:float -> unit -> t = "CylinderBufferGeometry" [@@bs.new] [@@bs.module "three"]
+      external make: ?radiusTop:float ->
+                     ?radiusBottom:float ->
+                     ?height:float ->
+                     ?radialSegments:int ->
+                     ?heightSegments:int ->
+                     ?openEnded:bool ->
+                     ?thetaStart:float ->
+                     ?thetaLength:float ->
+                     unit -> t = "CylinderBufferGeometry" [@@bs.new] [@@bs.module "three"]
     end
 
     external make: unit -> t = "BufferGeometry" [@@bs.new] [@@bs.module "three"]
@@ -438,11 +445,11 @@ sig
                                     (* method fog: *)
       method overrideMaterial: Material.t [@@bs.set]
       method dispose: unit -> unit
-      (* method toJSON *)
+      method toJSON: unit -> Js.Json.t
     end [@bs]
   type t = _scene Js.t
   external make: unit -> Scene.t = "Scene" [@@bs.new] [@@bs.module "three"]
-  external add: t -> Mesh.t -> unit = "" [@@bs.send]
+  external add: Scene.t -> Mesh.t -> unit = "" [@@bs.send]
 end = Scene
 
 module rec WebGLRenderer:

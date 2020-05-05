@@ -267,6 +267,17 @@ sig
   external make: Dom.Element.t -> t = "Texture" [@@bs.new] [@@bs.module "three"]
 end = Texture
 
+module rec VideoTexture:
+sig
+  class type _texture =
+    object
+      inherit Texture._texture
+    end [@bs]
+  type t = _texture Js.t
+  (* element: video *)
+  external make: Dom.Element.t -> t = "VideoTexture" [@@bs.new] [@@bs.module "three"]
+end = VideoTexture
+         
 module rec TextureLoader:
 sig
   class type _TextureLoader =

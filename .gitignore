@@ -28,3 +28,4 @@ lib/bs
 
 node_modules
 build
+*.bs.js

@@ -382,6 +382,12 @@ sig
     type param = {
         color: int [@bs.optional];
         map: Texture.t [@bs.optional];
+        alphaMap: Texture.t [@bs.optional];
+        transparent: bool [@bs.optional];
+        opacity: float [@bs.optional];
+        (* TODO *)
+        (* side: xxx [@bs.optional]; *)
+        alphaTest: float [@bs.optional];
       } [@@bs.deriving abstract]
     external make: param -> t = "MeshBasicMaterial" [@@bs.new] [@@bs.module "three"]
   end
@@ -390,6 +396,12 @@ sig
     type param = {
         color: int [@bs.optional];
         map: Texture.t [@bs.optional];
+        alphaMap: Texture.t [@bs.optional];
+        transparent: bool [@bs.optional];
+        opacity: float [@bs.optional];
+        (* TODO *)
+        (* side: xxx [@bs.optional]; *)
+        alphaTest: float [@bs.optional];
       } [@@bs.deriving abstract]
     external make: param -> t = "MeshPhongMaterial" [@@bs.new] [@@bs.module "three"]
   end

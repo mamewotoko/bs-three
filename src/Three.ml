@@ -214,12 +214,12 @@ sig
       method updateMatrix: unit -> unit
       method updateMatrixWorld: bool -> unit
       method worldToLocal: Vector3.t -> Vector3.t
-           
+
       method userData: float Js.Dict.t [@@bs.set] [@@bs.get]
       (* TODO: userData *)
       (* mesh or camera *)
       method add: Object3D.t -> unit
-           
+
     end [@bs]
   type t = _object3d Js.t
   external make: unit -> t = "Object3D" [@@bs.new] [@@bs.module "three"]
@@ -259,7 +259,7 @@ module rec Texture:
 sig
   class type _texture =
     object
-      method repeat: Vector2.t
+      (* method repeat: Vector2.t *)
       method needsUpdate: bool [@@bs.set]
                                (* TODO: add repeat set *)
     end [@bs]
@@ -277,7 +277,7 @@ sig
   (* element: video *)
   external make: Dom.Element.t -> t = "VideoTexture" [@@bs.new] [@@bs.module "three"]
 end = VideoTexture
-         
+
 module rec TextureLoader:
 sig
   class type _TextureLoader =
@@ -288,6 +288,17 @@ sig
   type t = _TextureLoader Js.t
   external make : unit -> t = "TextureLoader" [@@bs.new] [@@bs.module "three"]
 end = TextureLoader
+
+module rec SVGLoader:
+sig
+  class type _SVGLoader =
+    object
+      (*TODO define Texture type*)
+      method load: string -> Texture.t
+    end [@bs]
+  type t = _SVGLoader Js.t
+  external make : unit -> t = "SVGLoader" [@@bs.new] [@@bs.module "three"]
+end = SVGLoader
 
 module rec Float32Array:
 sig
@@ -305,6 +316,8 @@ sig
       method vertices: Vector3.t Js.Array.t [@@bs.get]
     end [@bs]
   type t = _Geometry Js.t
+  external make: unit -> t = "Geometry" [@@bs.new] [@@bs.module "three"]
+
   (* no buffer *)
   module Box:
   sig
@@ -337,7 +350,20 @@ sig
                    unit ->
                    t = "CylinderGeometry" [@@bs.new] [@@bs.module "three"]
   end
-  external make: unit -> t = "Geometry" [@@bs.new] [@@bs.module "three"]
+
+  module Cone:
+  sig
+    external make: ?radius:float ->
+                   ?height:float ->
+                   ?radialSegments:int ->
+                   ?heightSegments:int ->
+                   ?openEnded:bool ->
+                   ?thetaStart:float ->
+                   ?thetaLength:float ->
+                   unit ->
+                   t = "ConeGeometry"  [@@bs.new] [@@bs.module "three"]
+  end
+
 
   module rec BufferGeometry:
   sig
@@ -372,6 +398,7 @@ sig
 
     external make: unit -> t = "BufferGeometry" [@@bs.new] [@@bs.module "three"]
   end
+
 end = Geometry
 
 module rec Material:
@@ -580,7 +607,7 @@ sig
   external make: unit -> t = "three-gltf-exporter" [@@bs.new] [@@bs.module]
 end = GLTFExporter
 
-       
+
 (* not tested *)
 (* module rec DeviceOrientationControls:
  * sig

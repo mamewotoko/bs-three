@@ -35,9 +35,17 @@ var Vector3 = Caml_module.init_mod([
 
 Caml_module.update_mod([[0]], Vector3, Vector3);
 
+var Color = Caml_module.init_mod([
+      "Three.ml",
+      186,
+      6
+    ], [[0]]);
+
+Caml_module.update_mod([[0]], Color, Color);
+
 var Object3D = Caml_module.init_mod([
       "Three.ml",
-      226,
+      241,
       6
     ], [[0]]);
 
@@ -45,7 +53,7 @@ Caml_module.update_mod([[0]], Object3D, Object3D);
 
 var Group = Caml_module.init_mod([
       "Three.ml",
-      236,
+      251,
       6
     ], [[0]]);
 
@@ -53,7 +61,7 @@ Caml_module.update_mod([[0]], Group, Group);
 
 var Camera = Caml_module.init_mod([
       "Three.ml",
-      256,
+      271,
       6
     ], [[[[0]]]]);
 
@@ -61,7 +69,7 @@ Caml_module.update_mod([[[[0]]]], Camera, Camera);
 
 var Texture = Caml_module.init_mod([
       "Three.ml",
-      268,
+      283,
       6
     ], [[0]]);
 
@@ -69,7 +77,7 @@ Caml_module.update_mod([[0]], Texture, Texture);
 
 var VideoTexture = Caml_module.init_mod([
       "Three.ml",
-      279,
+      294,
       6
     ], [[0]]);
 
@@ -77,7 +85,7 @@ Caml_module.update_mod([[0]], VideoTexture, VideoTexture);
 
 var TextureLoader = Caml_module.init_mod([
       "Three.ml",
-      290,
+      305,
       6
     ], [[0]]);
 
@@ -85,7 +93,7 @@ Caml_module.update_mod([[0]], TextureLoader, TextureLoader);
 
 var SVGLoader = Caml_module.init_mod([
       "Three.ml",
-      301,
+      316,
       6
     ], [[0]]);
 
@@ -93,7 +101,7 @@ Caml_module.update_mod([[0]], SVGLoader, SVGLoader);
 
 var Float32Array = Caml_module.init_mod([
       "Three.ml",
-      310,
+      325,
       6
     ], [[0]]);
 
@@ -101,7 +109,7 @@ Caml_module.update_mod([[0]], Float32Array, Float32Array);
 
 var Geometry = Caml_module.init_mod([
       "Three.ml",
-      402,
+      416,
       6
     ], [[
         0,
@@ -133,7 +141,7 @@ Caml_module.update_mod([[
 
 var Material = Caml_module.init_mod([
       "Three.ml",
-      454,
+      468,
       6
     ], [[
         [[
@@ -251,7 +259,7 @@ Caml_module.update_mod([[
 
 var Line = Caml_module.init_mod([
       "Three.ml",
-      469,
+      483,
       6
     ], [[
         [[0]],
@@ -265,7 +273,7 @@ Caml_module.update_mod([[
 
 var Mesh = Caml_module.init_mod([
       "Three.ml",
-      485,
+      499,
       6
     ], [[
         0,
@@ -279,7 +287,7 @@ Caml_module.update_mod([[
 
 var Scene = Caml_module.init_mod([
       "Three.ml",
-      503,
+      518,
       6
     ], [[
         0,
@@ -293,7 +301,7 @@ Caml_module.update_mod([[
 
 var WebGLRenderer = Caml_module.init_mod([
       "Three.ml",
-      544,
+      559,
       6
     ], [[
         0,
@@ -339,7 +347,7 @@ Caml_module.update_mod([[
 
 var OrbitControls = Caml_module.init_mod([
       "Three.ml",
-      562,
+      577,
       6
     ], [[0]]);
 
@@ -347,7 +355,7 @@ Caml_module.update_mod([[0]], OrbitControls, OrbitControls);
 
 var WebVRPolyfill = Caml_module.init_mod([
       "Three.ml",
-      573,
+      588,
       6
     ], [[0]]);
 
@@ -355,7 +363,7 @@ Caml_module.update_mod([[0]], WebVRPolyfill, WebVRPolyfill);
 
 var StereoEffect = Caml_module.init_mod([
       "Three.ml",
-      585,
+      600,
       6
     ], [[0]]);
 
@@ -363,7 +371,7 @@ Caml_module.update_mod([[0]], StereoEffect, StereoEffect);
 
 var Light = Caml_module.init_mod([
       "Three.ml",
-      598,
+      613,
       6
     ], [[[[0]]]]);
 
@@ -371,7 +379,7 @@ Caml_module.update_mod([[[[0]]]], Light, Light);
 
 var GLTFExporter = Caml_module.init_mod([
       "Three.ml",
-      608,
+      623,
       6
     ], [[0]]);
 
@@ -381,6 +389,7 @@ exports.Euler = Euler;
 exports.Matrix3 = Matrix3;
 exports.Vector2 = Vector2;
 exports.Vector3 = Vector3;
+exports.Color = Color;
 exports.Object3D = Object3D;
 exports.Group = Group;
 exports.Camera = Camera;

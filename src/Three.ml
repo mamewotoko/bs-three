@@ -170,6 +170,21 @@ sig
   external make: float -> float -> float -> Vector3.t = "Vector3" [@@bs.new] [@@bs.module "three"]
 end = Vector3
 
+module rec Color:
+sig
+  class type _color =
+    object
+      method add: Color.t -> Color.t
+      method addColors: Color.t -> Color.t -> Color.t
+      method addScalar: float -> Color.t
+      method clone: Color.t
+      method copy: Color.t -> Color.t
+                                (* TODO *)
+    end
+    type t = _color Js.t
+  external make: int -> t = "Color" [@@bs.new] [@@bs.module "three"]
+end = Color
+
 module rec Object3D:
 sig
   class type _object3d =
@@ -178,11 +193,8 @@ sig
       method castShadow: bool [@@bs.set]
       (* method children *)
       method id: int
-      (*  ... *)
       method name: string [@@bs.set]
       method position: Vector3.t [@@bs.set]
-      (* used by lookAt method *)
-      method up: Vector3.t
       method rotation: Euler.t [@@bs.set]
       method scale: Vector3.t
       method up: Vector3.t
@@ -367,7 +379,6 @@ sig
                    t = "ConeGeometry"  [@@bs.new] [@@bs.module "three"]
   end
 
-
   module rec BufferGeometry:
   sig
     (* class type _BufferGeometry =
@@ -492,6 +503,7 @@ sig
   class type _scene =
     object
       inherit Object3D._object3d
+      method background: Color.t [@@bs.set] (* TODO: object *)
       method autoUpdate: bool [@@bs.set]
                               (*method background*)
       method environment: Texture.t [@@bs.set]

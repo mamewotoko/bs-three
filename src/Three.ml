@@ -184,6 +184,9 @@ sig
       (* used by lookAt method *)
       method up: Vector3.t
       method rotation: Euler.t [@@bs.set]
+      method scale: Vector3.t
+      method up: Vector3.t
+
       method uuid: string
       method visible: bool
 
